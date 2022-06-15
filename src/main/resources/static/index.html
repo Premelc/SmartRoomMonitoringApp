@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="popup.css">
+
+    <link rel=”stylesheet” href=”https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css”rel=”nofollow” integrity=”sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I” crossorigin=”anonymous”>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="navbar">
+        <button class="openbtn" onclick="toggleNav()" id="openBtnId">☰ Quick Access</button>
+        <div class="navbuttons">
+            HOME
+        </div>
+        <div class="navbuttons">
+            SEARCH
+        </div>
+        <div class="navbuttons">
+            DHMZ
+        </div>
+
+        <div class="logo">
+            <img src="crying-black-guy-meme%20(1).gif">
+        </div>
+
+        <div class="navbuttons">
+            WARNINGS
+        </div>
+
+        <div class="navbuttons">
+            NOTIFICATIONS
+        </div>
+
+        <div class="navbuttons">
+            ADRIA
+        </div>
+    </div>
+<div class="outer" id="main">
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+        <a href="#" onclick="openRoomArchiveStatusForm()">Room history</a>
+        <a href="#" onclick="openRoomStatusForm()">Room status</a>
+    </div>
+
+            <div class = "main" id="middle">
+
+                <div class="Popup">
+                    <div class="formPopup" id="roomArchiveStatusForm">
+                        <form action="PLACEHOLDER" class="formContainer">
+                            <h2>Check archive for room <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> </h2>
+                            <label for="roomNum">
+                                <strong>Room Number</strong>
+                            </label>
+                            <input type="text" id="roomNum2" placeholder="123" name="Room Number" required maxlength="3">
+                            <label for="dateFrom">
+                                <strong>Date from</strong>
+                            </label>
+                            <input type="date" id="dateFrom" placeholder="dd/mm/yyyy" name = "Date From" required>
+                            <label for="dateTo">
+                                <strong>Date To</strong>
+                            </label>
+                            <input type="date" id="dateTo" placeholder="dd/mm/yyyy" name = "Date To" required>
+
+                            <button type="submit" class="btn">Check</button>
+                            <button type="button" class="btn cancel" onclick="closeRoomArchiveStatusForm()">Close</button>
+                        </form>
+                    </div>
+
+                    <div class="formPopup" id="roomStatusForm">
+                        <form action="PLACEHOLDER" class="formContainer">
+                            <h2>Check room status</h2>
+                            <label for="roomNum">
+                                <strong>Room Number</strong>
+                            </label>
+                            <input type="text" id="roomNum" placeholder="123" name="Room Number" required maxlength="3">
+                            <button type="submit" class="btn">Check Status</button>
+                            <button type="button" class="btn cancel" onclick="closeRoomStatusForm()">Close</button>
+                        </form>
+                    </div>
+
+                </div>
+
+                <h1>MAIN ADRIA DATA</h1>
+                <p>How many times were you frustrated while looking out
+                    for a good collection of programming/algorithm/interview
+                    questions? What did you expect and what did you get?
+                    This portal has been created to provide well written,
+                    well thought and well-explained solutions for selected
+                    questions.
+                </p>
+                <h2>GeeksforGeeks</h2>
+                <p>GCET is an entrance test for the extensive classroom
+                    programme by GeeksforGeeks to build and enhance Data
+                    Structures and Algorithm concepts, mentored by Sandeep
+                    Jain (Founder & CEO, GeeksforGeeks).He has 7 years of
+                    teaching experience and 6 years of industry experience.
+                </p>
+                <h1>GeeksforGeeks</h1>
+                <p>How many times were you frustrated while looking out
+                    for a good collection of programming/algorithm/interview
+                    questions? What did you expect and what did you get?
+                    This portal has been created to provide well written,
+                    well thought and well-explained solutions for selected
+                    questions.
+                </p>
+                <h2>GeeksforGeeks</h2>
+                <p>GCET is an entrance test for the extensive classroom
+                    programme by GeeksforGeeks to build and enhance Data
+                    Structures and Algorithm concepts, mentored by Sandeep
+                    Jain (Founder & CEO, GeeksforGeeks).He has 7 years of
+                    teaching experience and 6 years of industry experience.
+                </p>
+                <h1>GeeksforGeeks</h1>
+                <p>How many times were you frustrated while looking out
+                    for a good collection of programming/algorithm/interview
+                    questions? What did you expect and what did you get?
+                    This portal has been created to provide well written,
+                    well thought and well-explained solutions for selected
+                    questions.
+                </p>
+                <h2>GeeksforGeeks</h2>
+                <p>GCET is an entrance test for the extensive classroom
+                    programme by GeeksforGeeks to build and enhance Data
+                    Structures and Algorithm concepts, mentored by Sandeep
+                    Jain (Founder & CEO, GeeksforGeeks).He has 7 years of
+                    teaching experience and 6 years of industry experience.
+                </p>
+            </div>
+
+            <div class = "right" id="right">
+                <h1>DHMZ DATA</h1>
+                <p>How many times were you frustrated while looking out
+                    for a good collection of programming/algorithm/interview
+                    questions? What did you expect and what did you get?
+                    This portal has been created to provide well written,
+                    well thought and well-explained solutions for selected
+                    questions.
+                </p>
+                <h2>GeeksforGeeks</h2>
+                <p>GCET is an entrance test for the extensive classroom
+                    programme by GeeksforGeeks to build and enhance Data
+                    Structures and Algorithm concepts, mentored by Sandeep
+                    Jain (Founder & CEO, GeeksforGeeks).He has 7 years of
+                    teaching experience and 6 years of industry experience.
+                </p>
+                <h1>GeeksforGeeks</h1>
+                <p>How many times were you frustrated while looking out
+                    for a good collection of programming/algorithm/interview
+                    questions? What did you expect and what did you get?
+                    This portal has been created to provide well written,
+                    well thought and well-explained solutions for selected
+                    questions.
+                </p>
+                <h2>GeeksforGeeks</h2>
+                <p>GCET is an entrance test for the extensive classroom
+                    programme by GeeksforGeeks to build and enhance Data
+                    Structures and Algorithm concepts, mentored by Sandeep
+                    Jain (Founder & CEO, GeeksforGeeks).He has 7 years of
+                    teaching experience and 6 years of industry experience.
+                </p>
+                <h1>GeeksforGeeks</h1>
+                <p>How many times were you frustrated while looking out
+                    for a good collection of programming/algorithm/interview
+                    questions? What did you expect and what did you get?
+                    This portal has been created to provide well written,
+                    well thought and well-explained solutions for selected
+                    questions.
+                </p>
+                <h2>GeeksforGeeks</h2>
+                <p>GCET is an entrance test for the extensive classroom
+                    programme by GeeksforGeeks to build and enhance Data
+                    Structures and Algorithm concepts, mentored by Sandeep
+                    Jain (Founder & CEO, GeeksforGeeks).He has 7 years of
+                    teaching experience and 6 years of industry experience.
+                </p>
+            </div>
+    <div class="bottombar">
+
+    </div>
+</div>
+
+    <script>
+
+        let flag = false;
+
+        function toggleNav(){
+            if(flag === true){
+                console.log(flag)
+                closeNav();
+            }else if(flag === false){
+                console.log(flag);
+                openNav();
+            }
+        };
+
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            fadeOut( document.getElementById("right") , document.getElementById("middle"));
+            flag = true;
+
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            fadeIn( document.getElementById("right"), document.getElementById("middle"));
+            flag = false;
+
+        }
+
+        function fadeOut(element1, element2) {
+            var op = 1;  // initial opacity
+            var timer = setInterval(function () {
+                if (op <= 0.3){
+                    clearInterval(timer);
+                }
+                element1.style.opacity = op;
+                element1.style.filter = 'alpha(opacity=' + op * 100 + ")";
+                element2.style.opacity = op;
+                element2.style.filter = 'alpha(opacity=' + op * 100 + ")";
+                op -= op * 0.1;
+            }, 15);
+        }
+
+        function fadeIn(element1, element2) {
+            var op = 0.1;  // initial opacity
+            var timer = setInterval(function () {
+                if (op >= 1){
+                    clearInterval(timer);
+                }
+                element1.style.opacity = op;
+                element1.style.filter = 'alpha(opacity=' + op * 100 + ")";
+                element2.style.opacity = op;
+                element2.style.filter = 'alpha(opacity=' + op * 100 + ")";
+                op += op * 0.1;
+            }, 15);
+        }
+
+        function openRoomStatusForm(){
+            closeNav();
+            closeRoomArchiveStatusForm();
+            document.getElementById("roomStatusForm").style.display = "block";
+
+        }
+
+        function closeRoomStatusForm(){
+            document.getElementById("roomStatusForm").style.display = "none";
+        }
+
+        function openRoomArchiveStatusForm(){
+            closeNav();
+            closeRoomStatusForm();
+            document.getElementById("roomArchiveStatusForm").style.display = "block";
+        }
+        function closeRoomArchiveStatusForm(){
+            document.getElementById("roomArchiveStatusForm").style.display = "none";
+        }
+
+    </script>
+
+</body>
+</html>

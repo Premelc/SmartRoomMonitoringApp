@@ -1,0 +1,65 @@
+body {
+    background-color: darkgray;
+    flex-flow: column nowrap;
+    display :flex;
+}
+.navbar{
+    width : 100%;
+    height: 130px;
+    flex-flow: row nowrap;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #111;
+    color: white;
+    padding: 10px 10px;
+    border: none;
+    display : flex;
+    position: fixed;
+    z-index: 999;
+    left : 0px;
+    top : 0px;
+}
+.logo img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+border-radius: 20%}
+
+.navbuttons{
+    padding : 50px;
+}
+.outer{
+    left : 0;
+    top: 130px;
+    position: absolute;
+    display: flex;
+    flex-flow: row nowrap;
+}
+.left {
+    height : 100%;
+    width : 0%;
+    padding: 10px;
+    float: left;
+    background-color: yellow;
+    flex-flow: column nowrap;
+}
+.main{
+    width : 75%;
+    padding: 10px;
+    background-color : darkgray;
+    flex-flow: column wrap;
+}
+.right {
+    width : 25%;
+    padding: 10px;
+    background-color: gray;
+    flex-flow: column nowrap;
+}
+.bottombar{
+    background-color : black ;
+    position : absolute;
+    width : 100%;
+    height: 150px;
+    bottom : -150px;
+    left: 0px;
+}
