@@ -162,8 +162,8 @@ public class AdriaIndoorController {
     }
     @GetMapping("/adria/{room}")
     @ResponseBody
-    public String adriaAllSelectiveParam(@PathVariable String room) {
+    public Document adriaAllSelectiveParam(@PathVariable String room) {
         List<String> lista = new ArrayList<>();
-        return mongoTemplate.getCollection(room).find().sort(Sorts.descending("vrijeme")).first().toString();
+        return mongoTemplate.getCollection(room).find().sort(Sorts.descending("vrijeme")).first();
     }
 }
