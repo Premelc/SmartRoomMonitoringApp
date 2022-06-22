@@ -1,0 +1,7 @@
+{
+  "name": "SmartRoomMonitoringApp",
+  "version": "1.0.0",
+  "devDependencies": {
+    "axios": "^0.27.2"
+  }
+}

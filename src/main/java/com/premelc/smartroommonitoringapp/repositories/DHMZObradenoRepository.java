@@ -11,6 +11,7 @@ public interface DHMZObradenoRepository extends MongoRepository<DHMZObradeno, St
 
     public DHMZObradeno findOneBy_id(String id);
     public List<DHMZObradeno> findAll();
+    public DHMZObradeno findOneByVrijemeGreaterThanEqual(double vrijeme);
 
     public long count();
 }
