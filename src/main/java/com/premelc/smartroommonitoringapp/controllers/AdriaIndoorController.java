@@ -264,25 +264,25 @@ public class AdriaIndoorController {
         if((god <= currentYear)) {
             for (long i = god; i <= currentYear; i++) {
                 if (i == 2013) {
-                    finder = mongoTemplate2013.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2013.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2014) {
-                    finder = mongoTemplate2014.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2014.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2015) {
-                    finder = mongoTemplate2015.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2015.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2016) {
-                    finder = mongoTemplate2016.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2016.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2017) {
-                    finder = mongoTemplate2017.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2017.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2018) {
-                    finder = mongoTemplate2018.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2018.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2019) {
-                    finder = mongoTemplate2019.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2019.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2020) {
-                    finder = mongoTemplate2020.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2020.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2021) {
-                    finder = mongoTemplate2021.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2021.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2022) {
-                    finder = mongoTemplate2022.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000))));
+                    finder = mongoTemplate2022.getCollection(room).find(Filters.and(Filters.gte("vrijeme", time), Filters.lte("vrijeme", (time + 86400000)))).sort(Sorts.descending("vrijeme"));
                 }
                 MongoCursor<Document> cursor = finder.iterator();
                 try {

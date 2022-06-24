@@ -86,9 +86,9 @@ function closeRoomOnDayForm(){
 }
 function openPopupRoomState(){
     closeNav();
-    document.getElementById("popupRoomState").style.display = "block";
+    document.getElementById("popupRoomStateContainer").style.display = "block";
 }
 
 function closePopupRoomState(){
-    document.getElementById("popupRoomState").style.display = "none";
+    document.getElementById("popupRoomStateContainer").style.display = "none";
 }

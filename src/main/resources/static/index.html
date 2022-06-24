@@ -16,10 +16,8 @@
             HOME
         </div></a>
         <div class="navbuttons">
-            SEARCH
-        </div>
-        <div class="navbuttons">
-            DHMZ
+            <span onclick="getCurrentRoomState(document.getElementById('quickCheckRoomNum').value)">QUICK CHECK</span>
+            <input  onclick="" type="text" maxlength="3" placeholder="123" id="quickCheckRoomNum">
         </div>
 
         <div class="logo">
@@ -37,17 +35,14 @@
         <div class="navbuttons">
             ADRIA
         </div>
-        <div id="userLoc"  class="navbuttons">
-            <b><u>CURRENT ROOM STATE</u></b>
+        <div class="navbuttons">
+            <b><u id="userLoc">CURRENT ROOM STATE</u></b>
         </div>
     </div>
 <div class="outer" id="main">
 
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Clients</a>
         <a href="#" onclick="openRoomOnDayForm()">Room status on day</a>
         <a href="#" onclick="openRoomArchiveStatusForm()">Room history</a>
         <a href="#" onclick="openRoomStatusForm()">Room status</a>
@@ -84,6 +79,7 @@
                                 <strong>Room Number</strong>
                             </label>
                             <input type="text" id="roomNum" placeholder="123" name="Room Number" required maxlength="3">
+
                             <button type="button" class="btn" onclick="getCurrentRoomState(document.getElementById('roomNum').value)" >Check Status</button>
                             <button type="button" class="btn cancel" onclick="closeRoomStatusForm()">Close</button>
                         </div>
@@ -95,15 +91,23 @@
                             <label for="roomNum">
                                 <strong>Room Number</strong>
                             </label>
+
                             <input type="text" id="roomOnDay" placeholder="123" name="Room Number" required maxlength="3">
+                            <label for="dateOn">
+                                <strong>Date</strong>
+                            </label>
                             <input type="date" id="dateOn" placeholder="dd/mm/yyyy" name = "Date On" required>
                             <button type="button" class="btn" onclick="roomStateOnDay(document.getElementById('roomOnDay').value , document.getElementById('dateOn').value)" >Check Status</button>
                             <button type="button" class="btn cancel" onclick="closeRoomOnDayForm()">Close</button>
                         </div>
                     </div>
 
-                    <div class="formPopup" id="popupRoomState">
+                    <div class="formPopup" id="popupRoomStateContainer" style="text-align: left">
+                        <div class="formContainer" id="popupRoomState">
+                            </div>
+                        <div class="formContainer" id="popupDHMZState">
 
+                        </div>
                     </div>
 
                 </div>
@@ -167,22 +171,72 @@
             }
         }
 
+        async function fetchExactDHMZReading(milis){
+            try {
+                const reading = await axios.get(`http://localhost:8080/dhmz/circa/${milis}`)
+                return reading.data;
+            }
+            catch (e){
+                console.log(e)
+            }
+        }
+
+        async function showReadingOnMain(roomId , milis){
+            closePopupRoomState();
+            const data2 = await fetchExactRoomReading(roomId , milis);
+            const dhmz = await fetchExactDHMZReading(milis);
+            let data = JSON.parse(data2);
+            const date = new Date(data.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
+            document.getElementById("left").innerHTML =`
+        <h1>Broj sobe : <span id="currentRoomId">${roomId}</span></h1>
+        <h2 >Vrijeme : ${date}</h2>
+        <h2 >Prisutnost : ${data.prisutnost}</h2>
+        <h2 >Zadana temperatura : ${data.zadana}</h2>
+        <h2 >Izmjerena temperatura : ${data.izmjerena}</h2>
+        <h2 >Status klime : ${data.statusKlime}</h2>
+        <h2 >Mod klime : ${data.modKlime}</h2>
+        <h2 >Prozor : ${data.prozor}</h2>
+        <h2 >Ventil : ${data.ventil}</h2>
+        <h2 >WC set : ${data.wcSet}</h2>
+        <h2 >WC mjerenja : ${data.wcMjerenja}</h2>
+`;
+            const date2 = new Date(dhmz.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
+            document.getElementById("right").innerHTML =`
+        <h1>DHMZ DATA</h1>
+        <h3>Posljednje očitanje: </h3>
+        <h2>Vrijeme : ${date2}</h2>
+        <h2 >Zračenje : ${dhmz.zracenje}</h2>
+        <h2 >Temperatura : ${dhmz.temperatura}</h2>
+        <h2 >Smjer vjetra : ${dhmz.smjerVjetra}</h2>
+       <h2 >Brzina vjetra : ${dhmz.brzinaVjetra}</h2>
+       <h2 >Vlaznost : ${dhmz.vlaznost}</h2>
+  `;
+            document.getElementById("userLoc").innerHTML = "ARCHIVE ROOM STATE";
+
+        }
+
         async function ExactRoomReading(roomId , time){
             var myDate = new Date(time);
             var milis = myDate.getTime();
             const data2 = await fetchExactRoomReading(roomId , milis);
-            console.log(data2);
+            const dhmz = await fetchExactDHMZReading(milis);
             let data = JSON.parse(data2);
-            var popup = document.getElementById("popupRoomState");
-            popup.innerHTML = "";
-
+            var popupAdria = document.getElementById("popupRoomState");
+            var popupDHMZ = document.getElementById("popupDHMZState");
+            popupAdria.innerHTML = "";
+            popupDHMZ.innerHTML = "";
             var button = document.createElement("div");
             button.innerHTML =`
                 <button type='button' class='btn cancel' onclick='closePopupRoomState()'>Close</button>
                 `;
 
+            var button2 = document.createElement("div");
+            button2.innerHTML =`
+                <button type='button' class='btn' onclick='showReadingOnMain("${roomId}" , "${data.vrijeme}")'>Show in main window</button>
+                `;
+
             var dataDiv = document.createElement("div");
-            const date = new Date(data.vrijeme).toLocaleString('hr-HR' , { timeZone: 'CET' });
+            const date = new Date(data.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
             dataDiv.innerHTML = `
                     <h1>Room number : <span id="currentRoomId2">${roomId}</span></h1>
         <h2 >Vrijeme : ${date}</h2>
@@ -197,10 +251,32 @@
         <h2 >WC mjerenja : ${data.wcMjerenja}</h2>
             `;
 
-            popup.appendChild(dataDiv);
-            popup.appendChild(button);
+            var dataDiv2 = document.createElement("div");
+
+
+            const date2 = new Date(dhmz.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
+
+            dataDiv2.innerHTML = `
+                    <h1>DHMZ DATA</h1>
+        <h3>Trenutno stanje: </h3>
+        <h2>Vrijeme : ${date2}</h2>
+        <h2 >Zračenje : ${dhmz.zracenje}</h2>
+        <h2 >Temperatura : ${dhmz.temperatura}</h2>
+        <h2 >Smjer vjetra : ${dhmz.smjerVjetra}</h2>
+       <h2 >Brzina vjetra : ${dhmz.brzinaVjetra}</h2>
+       <h2 >Vlaznost : ${dhmz.vlaznost}</h2>
+            `;
+
+
+            popupAdria.appendChild(dataDiv);
+
+            popupDHMZ.appendChild(dataDiv2);
+            popupDHMZ.appendChild(button2);
+            popupDHMZ.appendChild(button);
 
             openPopupRoomState();
+
+            document.getElementById("userLoc").innerHTML = "ARCHIVE ROOM STATE";
         }
 
         async function roomStateOnDay(roomId , time){
@@ -222,29 +298,25 @@
             for(let i in data){
                 let item = document.createElement("li");
                 let it = JSON.parse(data[i]);
-                const date = new Date(it.vrijeme).toLocaleString('hr-HR' , { timeZone: 'CET' });
-
-
+                const date = new Date(it.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
                 item.innerHTML = `
                 <a id="${it.vrijeme}" onclick="ExactRoomReading('${roomNumber}' , ${it.vrijeme})">Timestamp: <b>${date}</b></a>
 
                 `;
-
                 list.appendChild(item);
             }
-
             document.getElementById("left").appendChild(list);
-
            closeRoomOnDayForm();
+            document.getElementById("userLoc").innerHTML = "ARCHIVE ROOM STATE";
         }
 
 
 
         async function getCurrentRoomState(roomId){
             const data = await fetchData(roomId);
-            const date = new Date(data.vrijeme).toLocaleString('hr-HR' , { timeZone: 'CET' });
+            const date = new Date(data.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
             document.getElementById("left").innerHTML =`
-        <h1>Room number : <span id="currentRoomId">${roomId}</span></h1>
+        <h1>Broj sobe : <span id="currentRoomId">${roomId}</span></h1>
         <h2 >Vrijeme : ${date}</h2>
         <h2 >Prisutnost : ${data.prisutnost}</h2>
         <h2 >Zadana temperatura : ${data.zadana}</h2>
@@ -257,11 +329,11 @@
         <h2 >WC mjerenja : ${data.wcMjerenja}</h2>
 `;
             const dhmz = await fetchCurrentDHMZ()
-
+            const date2 = new Date(dhmz.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
             document.getElementById("right").innerHTML =`
         <h1>DHMZ DATA</h1>
-        <h3>Trenutno stanje: </h3>
-        <h2>Vrijeme : ${dhmz.vrijeme}</h2>
+        <h3>Posljednje očitanje: </h3>
+        <h2>Vrijeme : ${date2}</h2>
         <h2 >Zračenje : ${dhmz.zracenje}</h2>
         <h2 >Temperatura : ${dhmz.temperatura}</h2>
         <h2 >Smjer vjetra : ${dhmz.smjerVjetra}</h2>
@@ -271,6 +343,7 @@
 `;
 
             closeRoomStatusForm();
+            document.getElementById("userLoc").innerHTML = "CURRENT ROOM STATE";
         }
     </script>
 

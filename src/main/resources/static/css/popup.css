@@ -4,17 +4,19 @@
     width: 100%;
 }
 .formPopup {
+    overflow: scroll;
     display: none;
     position: fixed;
     left: 45%;
-    top: 25%;
+    top: 20%;
     opacity: 1;
+    max-height: 600px;
     transform: translate(-50%, 5%);
     border: 3px solid #999999;
     z-index: 9;
 }
 .formContainer {
-    max-width: 350px;
+    width: 400px;
     padding: 20px;
     background-color: #fff;
 }
