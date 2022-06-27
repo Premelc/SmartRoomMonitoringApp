@@ -41,6 +41,15 @@
     </div>
 <div class="outer" id="main">
 
+    <div class="chartPopup" id="chartPopup">
+        <div>
+            <div id="container" style="width: 100%; height: 100%;">
+
+            </div>
+            <button type="button" class="btn cancel" style="height: 100%" onclick="closeChartPopup()">Close</button>
+        </div>
+    </div>
+
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         <a href="#" onclick="openRoomOnDayForm()">Room status on day</a>
@@ -50,7 +59,11 @@
 
             <div class = "main" id="middle">
 
+
                 <div class="Popup">
+
+
+
                     <div class="formPopup" id="roomArchiveStatusForm">
                         <form action="PLACEHOLDER" class="formContainer">
                             <h2>Check archive for room </h2>
@@ -113,7 +126,7 @@
                 </div>
                 <h1>MAIN ADRIA DATA</h1>
                 <div id="left">
-                    <button>test</button>
+                    <button type="button" class="btn" onclick="drawChart('001','zadana','1362577200000','1640214000000')">test</button>
                 </div>
 
             </div>
@@ -127,12 +140,62 @@
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/boost.js"></script>
     <script>
         //posljednje stanje sobe
+
+        async function drawChart(roomNumber,field ,milis , milisTo){
+            openChartPopup();
+
+            const fetchedData = await fetchReadingsInRange(roomNumber , field , milis , milisTo);
+            let data;
+            var i = 0;
+            var series =  [{
+                data: []
+            }];
+            for (i = 0;i < fetchedData.length; i++) {
+                 data = JSON.parse(fetchedData[i]);
+                series[0].data[i] = [data.vrijeme, data[field]]
+            }
+            series[0].data = series[0].data.sort();
+            const chart = Highcharts.chart('container', {
+                boost: {
+                    useGPUTranslations: true
+                },
+                chart: {
+                    type: 'line',
+                    zoomType: 'x'
+                },
+                title: {
+                    text: field
+                },
+                xAxis: {
+                    type: 'datetime',
+                    //Svakih 30 dana
+                    maxtickInterval: 30*7 * 24 * 36e5,
+                    labels:{
+                        format: '{value:%d/%m/%Y}'
+                    },
+                    scrollbar: {
+                        enabled: true
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Analiza ' + field + 'za sobu ' + roomNumber
+                    },
+                    scrollbar: {
+                        enabled: true
+                    }
+                },
+                series: series
+            });
+        }
+        //posljednje stanje adria rooms
         async function fetchData(roomId){
             try {
                 const response = await axios.get(`http://localhost:8080/adria/${roomId}`)
-                console.log(response)
                 return response.data;
             }
             catch (e){
@@ -143,7 +206,6 @@
         async function fetchCurrentDHMZ(){
             try {
                 const response = await axios.get(`http://localhost:8080/dhmz/latest`)
-                console.log(response)
                 return response.data;
             }
             catch (e){
@@ -174,6 +236,16 @@
         async function fetchExactDHMZReading(milis){
             try {
                 const reading = await axios.get(`http://localhost:8080/dhmz/circa/${milis}`)
+                return reading.data;
+            }
+            catch (e){
+                console.log(e)
+            }
+        }
+
+        async function fetchReadingsInRange(room , field , timeFrom , timeTo){
+            try {
+                const reading = await axios.get(`http://localhost:8080/adria/${room}/${field}/range/${timeFrom}/${timeTo}`)
                 return reading.data;
             }
             catch (e){
@@ -282,7 +354,8 @@
         async function roomStateOnDay(roomId , time){
             var myDate = new Date(time);
             var milis = myDate.getTime();
-            var data = await fetchRoomReadingsOnDay(roomId , milis);
+            var milisTo = milis+86400000;
+            var data = await fetchReadingsInRange(roomId , "vrijeme" , milis , milisTo);
 
             document.getElementById("left").innerHTML = "";
 
@@ -305,7 +378,13 @@
                 `;
                 list.appendChild(item);
             }
+            const analyzeButton = document.createElement("span");
+            analyzeButton.innerHTML = `
+                <button onclick="drawChart('${roomNumber}','zadana' , ${milis} , ${milisTo})">ANALIZIRAJ</button>
+
+                `;
             document.getElementById("left").appendChild(list);
+            document.getElementById("left").appendChild(analyzeButton);
            closeRoomOnDayForm();
             document.getElementById("userLoc").innerHTML = "ARCHIVE ROOM STATE";
         }
@@ -350,8 +429,7 @@
 
     <script src="./javascript/sidebar.js">
     </script>
-    <script src="./javascript/LeftWindow.js">
-    </script>
+
 
 
 

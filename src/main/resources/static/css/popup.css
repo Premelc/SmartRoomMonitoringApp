@@ -10,11 +10,35 @@
     left: 45%;
     top: 20%;
     opacity: 1;
-    max-height: 600px;
     transform: translate(-50%, 5%);
     border: 3px solid #999999;
     z-index: 9;
 }
+.chartPopup .btn {
+    min-height: 100%;
+    padding: 12px 20px;
+    border: none;
+    background-color: #8ebf42;
+    color: #fff;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+.chartPopup{
+    overflow: scroll;
+    display: none;
+    position: fixed;
+    width: 95%;
+    left: 50%;
+    top: 20%;
+    opacity: 1;
+    transform: translate(-50%, 5%);
+    border: 3px solid #999999;
+    z-index: 9;
+}
+
 .formContainer {
     width: 400px;
     padding: 20px;
