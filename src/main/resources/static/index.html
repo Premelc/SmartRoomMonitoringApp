@@ -119,8 +119,9 @@
                         </div>
                     </div>
 
-                    <div class="formPopup" id="popupRoomStateContainer" style="text-align: left">
+                    <div class="formPopup" id="popupRoomStateContainer" style="text-align: left; overflow: scroll">
                         <div class="formContainer" id="popupRoomState">
+
                             </div>
                         <div class="formContainer" id="popupDHMZState">
 
@@ -236,6 +237,18 @@
                 console.log(e)
             }
         }
+
+        //posljednje stanje dhmz
+        async function fetchSpecificDhmz(time){
+            try {
+                const response = await axios.get(`http://localhost:8080/dhmz/${time}`)
+                return response.data;
+            }
+            catch (e){
+                console.log(e)
+            }
+        }
+
         //Ocitanja unutar 24h
         async function fetchRoomReadingsOnDay(roomId , time){
             try {
@@ -267,6 +280,16 @@
             }
         }
 
+        async function fetchDHMZTimestamps(timeFrom , timeTo){
+            try {
+                const reading = await axios.get(`http://localhost:8080/dhmz/range/${timeFrom}/${timeTo}`)
+                return reading.data;
+            }
+            catch (e){
+                console.log(e)
+            }
+        }
+
         async function fetchExactDHMZReading(milis){
             try {
                 const reading = await axios.get(`http://localhost:8080/dhmz/circa/${milis}`)
@@ -285,6 +308,58 @@
             catch (e){
                 console.log(e)
             }
+        }
+
+        async function fetchDHMZReadingInRange(field , timeFrom , timeTo){
+            try {
+                const reading = await axios.get(`http://localhost:8080/dhmz/${field}/range/${timeFrom}/${timeTo}`)
+                return reading.data;
+            }
+            catch (e){
+                console.log(e)
+            }
+        }
+
+        async function ExactDHMZreading(time){
+            try{
+                showSpinner();
+                var myDate = new Date(time);
+                var milis = myDate.getTime();
+                const dhmz = await fetchSpecificDhmz(milis);
+                var popupAdria = document.getElementById("popupRoomState");
+                var popupDHMZ = document.getElementById("popupDHMZState");
+                popupAdria.innerHTML = "";
+                popupDHMZ.innerHTML = "";
+                var button = document.createElement("div");
+                button.innerHTML =`
+                <button type='button' class='btn cancel' onclick='closePopupRoomState()'>Close</button>
+                `;
+                var dataDiv2 = document.createElement("div");
+                const date2 = new Date(dhmz.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
+
+                dataDiv2.innerHTML = `
+                    <h1>DHMZ DATA</h1>
+        <h3>Trenutno stanje: </h3>
+        <h2>Vrijeme : ${date2}</h2>
+        <h2 >Zračenje : ${dhmz.zracenje}</h2>
+        <h2 >Temperatura : ${dhmz.temperatura}</h2>
+        <h2 >Smjer vjetra : ${dhmz.smjerVjetra}</h2>
+       <h2 >Brzina vjetra : ${dhmz.brzinaVjetra}</h2>
+       <h2 >Vlaznost : ${dhmz.vlaznost}</h2>
+            `;
+                popupAdria.appendChild(dataDiv2);
+                popupAdria.appendChild(button);
+
+                openPopupRoomState();
+
+                document.getElementById("userLoc").innerHTML = "ARCHIVE ROOM STATE";
+            }catch (e){
+                console.log(e);
+            }finally{
+                hideSpinner();
+            }
+
+
         }
 
         async function showReadingOnMain(roomId , milis){
@@ -413,11 +488,12 @@
                 var milisTo = date2.getTime();
                 var timestamps = true;
                 const list = document.createElement("ol");
-
+                const list2 = document.createElement("ol");
                 if(milis == milisTo){
                     milisTo += 86400000;
                 }
                 var data = await fetchAdriaTimestamps(roomId , milis , milisTo);
+                var data2 = await fetchDHMZTimestamps(milis , milisTo);
 
                 if (data.length > 10000){
                     timestamps = false;
@@ -444,6 +520,19 @@
                 `;
                     list.appendChild(item);
                 }
+
+                    for(let i in data2) {
+                        let it2 = JSON.parse(data2[i]);
+                        const date2 = new Date(it2.vrijeme).toLocaleString('hr-HR', {timeZone: 'UTC'});
+
+                        let item2 = document.createElement("li");
+                        item2.innerHTML = `
+                <a id="${it2.vrijeme}" onclick="ExactDHMZreading(${it2.vrijeme})">Timestamp: <b>${date2}</b></a>
+
+                `;
+                        list2.appendChild(item2);
+                    }
+
                 }
                 let item2 = document.createElement("h2");
                 item2.innerHTML = `Broj očitanja: ${data.length} `;
@@ -454,6 +543,7 @@
                     document.getElementById("left").appendChild(item);
                 }else {
                     document.getElementById("left").appendChild(list);
+                    document.getElementById("right").appendChild(list2);
                 }
                 const analyzeButton = document.createElement("span");
                 analyzeButton.innerHTML = `
@@ -467,9 +557,24 @@
                 <input type="checkbox" name="array[]" value="modKlime">modKlime</checkbox>
                 <input type="checkbox" name="array[]" value="wcSet">wcSet</checkbox>
                 <input type="checkbox" name="array[]" value="wcMjerenja">wcMjerenja</checkbox>
-                 <button onclick="drawChart('${roomNumber}','placeholder' , ${milis} , ${milisTo})">ANALIZIRAJ ODABRANO</button>
+                 <button onclick="drawChart('${roomNumber}','adria' , ${milis} , ${milisTo})">ANALIZIRAJ ODABRANO</button>
+                 <button onclick="drawChart('${roomNumber}','both' , ${milis} , ${milisTo})">ANALIZIRAJ ADRIA I DHMZ</button>
 `;
+
+                const analyzeButton2 = document.createElement("span");
+                analyzeButton2.innerHTML = `
+                <input type="checkbox" name="array2[]" value="zracenje">Zracenje</checkbox>
+                <input type="checkbox" name="array2[]" value="temperatura">temperatura</checkbox>
+                <input type="checkbox" name="array2[]" value="smjerVjetra">Smjer Vjetra</checkbox>
+                <input type="checkbox" name="array2[]" value="brzinaVjetra">brzinaVjetra</checkbox>
+                <input type="checkbox" name="array2[]" value="vlaznost">vlaznost</checkbox>
+                 <button onclick="drawChart('${roomNumber}','dhmz' , ${milis} , ${milisTo})">ANALIZIRAJ ODABRANO</button>
+`;
+
                 document.getElementById("left").appendChild(analyzeButton);
+
+                document.getElementById("right").append(analyzeButton2);
+
                 closeRoomOnDayForm();
                 closeRoomArchiveStatusForm();
                 document.getElementById("userLoc").innerHTML = "ARCHIVE ROOM STATE";
