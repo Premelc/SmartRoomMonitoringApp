@@ -152,65 +152,67 @@
         async function drawChart(roomNumber,field ,milis , milisTo){
 
             try{
-                showSpinner();
-                const fetchedData = await fetchReadingsInRange(roomNumber , field , milis , milisTo);
-                openChartPopup();
-                let data;
-                var i = 0;
-                var series =  [{
-                    data: []
-                }];
-                for (i = 0;i < fetchedData.length; i++) {
-                    data = JSON.parse(fetchedData[i]);
-                    series[0].data[i] = [data.vrijeme, data[field]]
-                }
-                series[0].data = series[0].data.sort();
 
-                if(field == 'modKlime'){
-                    var Hcount;
-                    var Acount;
-                    for (i = 0 ; i< series[0].data.length ; i++){
-                        if (series[0].data.modKlime == "H"){
+                var input = document.getElementsByName('array[]');
 
+
+                const chart = Highcharts.chart('container', {
+                    boost: {
+                        useGPUTranslations: true
+                    },
+                    chart: {
+                        type: 'spline',
+                        zoomType: 'x'
+                    },
+                    title: {
+                        text: 'Analiza za sobu ' + roomNumber
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        //Svakih 30 dana
+                        maxtickInterval: 30 * 7 * 24 * 36e5,
+                        mintickInterval: 24 * 36e5,
+                        labels: {
+                            rotation: 45,
+                            format: '{value:%H:%M %d/%m/%Y}'
+                        },
+                        scrollbar: {
+                            enabled: true
+                        }
+                    },
+                    yAxis: {
+
+                        scrollbar: {
+                            enabled: true
                         }
                     }
-                }else {
-                    const chart = Highcharts.chart('container', {
-                        boost: {
-                            useGPUTranslations: true
-                        },
-                        chart: {
-                            type: 'line',
-                            zoomType: 'x'
-                        },
-                        title: {
-                            text: field
-                        },
-                        xAxis: {
-                            type: 'datetime',
-                            //Svakih 30 dana
-                            maxtickInterval: 30 * 7 * 24 * 36e5,
-                            labels: {
-                                format: '{value:%d/%m/%Y}'
-                            },
-                            scrollbar: {
-                                enabled: true
-                            }
-                        },
-                        yAxis: {
-                            title: {
-                                text: 'Analiza ' + field + 'za sobu ' + roomNumber
-                            },
-                            scrollbar: {
-                                enabled: true
-                            }
-                        },
-                        series: series
-                    });
+                });
+
+                showSpinner();
+
+
+                let data;
+                var i = 0;
+                var series =  [];
+                for (var j = 0; j < input.length; j++) {
+                    if(input[j].checked){
+                        const fetchedData = await fetchReadingsInRange(roomNumber , input[j].value , milis , milisTo);
+                        for (i = 0;i < fetchedData.length; i++) {
+                            data2 = JSON.parse(fetchedData[i]);
+                            series[i] = [data2.vrijeme, data2[input[j].value]]
+                        }
+                        series = series.sort();
+                        console.log(series);
+                        chart.addSeries({
+                            name: input[j].value,
+                            data: series
+                        });
+                    }
                 }
             }catch(e){
                 console.log(e);
             }finally{
+                openChartPopup();
                 hideSpinner();
             }
         }
@@ -455,26 +457,17 @@
                 }
                 const analyzeButton = document.createElement("span");
                 analyzeButton.innerHTML = `
-                <button onclick="drawChart('${roomNumber}','zadana' , ${milis} , ${milisTo})">ANALIZIRAJ ZADANU</button>
-                <button onclick="drawChart('${roomNumber}','izmjerena' , ${milis} , ${milisTo})">ANALIZIRAJ IZMJERENU</button>
-                <button onclick="drawChart('${roomNumber}','statusKlime' , ${milis} , ${milisTo})">ANALIZIRAJ STATUS KLIME</button>
-                <button onclick="drawChart('${roomNumber}','brzinaPuhanja' , ${milis} , ${milisTo})">ANALIZIRAJ BRZINU PUHANJA</button>
-                <button onclick="drawChart('${roomNumber}','ventil' , ${milis} , ${milisTo})">ANALIZIRAJ VENTIL</button>
-                <button onclick="drawChart('${roomNumber}','prisutnost' , ${milis} , ${milisTo})">ANALIZIRAJ PRISUTNOST</button>
-                <button onclick="drawChart('${roomNumber}','prozor' , ${milis} , ${milisTo})">ANALIZIRAJ PROZOR</button>
-                <button onclick="drawChart('${roomNumber}','modKlime' , ${milis} , ${milisTo})">ANALIZIRAJ MOD KLIME</button>
-                <button onclick="drawChart('${roomNumber}','wcSet' , ${milis} , ${milisTo})">ANALIZIRAJ WC SET</button>
-                <button onclick="drawChart('${roomNumber}','wcMjerenja' , ${milis} , ${milisTo})">ANALIZIRAJ WC MJERENJA</button>
                 <input type="checkbox" name="array[]" value="zadana">Zadana</checkbox>
                 <input type="checkbox" name="array[]" value="izmjerena">izmjerena</checkbox>
                 <input type="checkbox" name="array[]" value="statusKlime">statusKlime</checkbox>
                 <input type="checkbox" name="array[]" value="brzinaPuhanja">brzinaPuhanja</checkbox>
                 <input type="checkbox" name="array[]" value="ventil">ventil</checkbox>
+                <input type="checkbox" name="array[]" value="prisutnost">prisutnost</checkbox>
                 <input type="checkbox" name="array[]" value="prozor">prozor</checkbox>
                 <input type="checkbox" name="array[]" value="modKlime">modKlime</checkbox>
                 <input type="checkbox" name="array[]" value="wcSet">wcSet</checkbox>
                 <input type="checkbox" name="array[]" value="wcMjerenja">wcMjerenja</checkbox>
-                 <button onclick="drawChart('${roomNumber}','wcMjerenja' , ${milis} , ${milisTo})">ANALIZIRAJ ODABRANO</button>
+                 <button onclick="drawChart('${roomNumber}','placeholder' , ${milis} , ${milisTo})">ANALIZIRAJ ODABRANO</button>
 `;
                 document.getElementById("left").appendChild(analyzeButton);
                 closeRoomOnDayForm();

@@ -9,6 +9,11 @@ function toggleNav(){
     }
 };
 function openNav() {
+    closeNav();
+    closeRoomArchiveStatusForm();
+    closeRoomOnDayForm();
+    closeChartPopup()
+    closeRoomStatusForm();
     document.getElementById("mySidebar").style.width = "250px";
     fadeOut( document.getElementById("right") , document.getElementById("middle"));
     flag = true;
