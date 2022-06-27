@@ -31,6 +31,16 @@ function fadeOut(element1, element2) {
         op -= op * 0.1;
     }, 15);
 }
+
+function showSpinner(){
+    document.getElementById("spinner").style.display = "block";
+    fadeOut( document.getElementById("right") , document.getElementById("middle"));
+}
+function hideSpinner(){
+    document.getElementById("spinner").style.display = "none";
+    fadeIn( document.getElementById("right"), document.getElementById("middle"));
+}
+
 function fadeIn(element1, element2) {
     var op = 0.1;  // initial opacity
     var timer = setInterval(function () {

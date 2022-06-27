@@ -344,4 +344,49 @@ public class AdriaIndoorController {
         return lista;
     }
 
+    @GetMapping("/adria/{room}/range/{timeFrom}/{timeTo}")
+    @ResponseBody
+    public List<String> adriaRoomOnDayOnlyTime(@PathVariable String room, @PathVariable Long timeFrom, @PathVariable Long timeTo ) {
+        List<String> lista = new ArrayList<>();
+        long god = (timeFrom / 31556952000L) + 1970;
+        System.out.println("godina: " + god);
+        FindIterable<Document> finder = mongoTemplate.getCollection(room).find();
+        if((god <= currentYear)) {
+            for (long i = god; i <= currentYear; i++) {
+                if (i == 2013) {
+                    finder = mongoTemplate2013.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2014) {
+                    finder = mongoTemplate2014.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme") , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2015) {
+                    finder = mongoTemplate2015.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2016) {
+                    finder = mongoTemplate2016.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2017) {
+                    finder = mongoTemplate2017.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2018) {
+                    finder = mongoTemplate2018.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2019) {
+                    finder = mongoTemplate2019.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme") , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2020) {
+                    finder = mongoTemplate2020.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme") , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2021) {
+                    finder = mongoTemplate2021.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme") , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2022) {
+                    finder = mongoTemplate2022.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                }
+                MongoCursor<Document> cursor = finder.iterator();
+                try {
+                    while (cursor.hasNext()) {
+
+                        lista.add(cursor.next().toJson());
+                        System.out.println(lista.get(lista.size()-1));
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+        }
+        return lista;
+    }
+
 }
