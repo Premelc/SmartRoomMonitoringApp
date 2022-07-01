@@ -98,6 +98,7 @@ function closePopupRoomState(){
     document.getElementById("popupRoomStateContainer").style.display = "none";
 }
 function closeChartPopup(){
+    document.getElementById("container").innerHTML = "";
     document.getElementById("chartPopup").style.display = "none";
 }
 function closeRoomArchiveStatusForm(){

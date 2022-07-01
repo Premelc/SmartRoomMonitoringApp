@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Projections.*;
 
 @RestController
 public class DHMZObradenoController {
@@ -362,6 +363,77 @@ public class DHMZObradenoController {
             }
         }
         return "empty";
+    }
+
+    //http://localhost:8080/dhmz/fields/range/${timeFrom}/${timeTo}`+requestBody
+    @GetMapping("/dhmz/fields/range/{timeFrom}/{timeTo}")
+    @ResponseBody
+    public List<String> getSelectiveDHMZInOne(@PathVariable Long timeFrom , @PathVariable Long timeTo ,@RequestParam Boolean vrijeme ,@RequestParam Boolean zracenje , @RequestParam Boolean temperatura , @RequestParam Boolean smjerVjetra , @RequestParam Boolean brzinaVjetra , @RequestParam Boolean vlaznost) {
+        List<String> lista = new ArrayList<>();
+        long god = (timeFrom / 31556952000L) + 1970;
+        long godDo =  (timeTo / 31556952000L) + 1970;
+        List<String> fields = new ArrayList<>();
+        if (vrijeme){
+            fields.add("vrijeme");
+        }
+        if(zracenje){
+            fields.add("zracenje");
+        }
+        if (temperatura){
+            fields.add("temperatura");
+        }
+        if (smjerVjetra){
+            fields.add("smjerVjetra");
+        }
+        if (brzinaVjetra){
+            fields.add("brzinaVjetra");
+        }
+        if (vlaznost){
+            fields.add("vlaznost");
+        }
+
+        Bson projection = fields(include(fields), excludeId());
+        FindIterable<Document> finder = mongoTemplate.getCollection("DHMZObradeno").find();
+        if((god <= currentYear)) {
+            System.out.println("godina poc: " + god);
+            if (god < 2013)god = 2013;
+            if (god > 2022)god = 2022;
+            if (godDo < 2013)godDo = 2013;
+            if (godDo > 2022)godDo = 2022;
+            for (long i = god; i <= godDo; i++) {
+                System.out.println(i);
+                if (i == 2013) {
+                    finder = mongoTemplate2013.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                } else if (i == 2014) {
+                    finder = mongoTemplate2014.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                } else if (i == 2015) {
+                    finder = mongoTemplate2015.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                } else if (i == 2016) {
+                    finder = mongoTemplate2016.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                } else if (i == 2017) {
+                    finder = mongoTemplate2017.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                } else if (i == 2018) {
+                    finder = mongoTemplate2018.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                } else if (i == 2019) {
+                    finder = mongoTemplate2019.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                } else if (i == 2020) {
+                    finder = mongoTemplate2020.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                } else if (i == 2021) {
+                    finder = mongoTemplate2021.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                } else if (i == 2022) {
+                    finder = mongoTemplate2022.getCollection("DHMZObradeno").find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.ascending("vrijeme"));
+                }
+                MongoCursor<Document> cursor = finder.iterator();
+                try {
+                    while (cursor.hasNext()) {
+                        lista.add(cursor.next().toJson());
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+        }
+        return lista;
     }
 
 }

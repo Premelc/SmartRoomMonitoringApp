@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+import static com.mongodb.client.model.Projections.*;
+
 @RestController
 public class AdriaIndoorController {
 
@@ -309,25 +311,25 @@ public class AdriaIndoorController {
         if((god <= currentYear)) {
             for (long i = god; i <= currentYear; i++) {
                 if (i == 2013) {
-                    finder = mongoTemplate2013.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2013.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2014) {
-                    finder = mongoTemplate2014.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2014.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2015) {
-                    finder = mongoTemplate2015.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2015.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2016) {
-                    finder = mongoTemplate2016.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2016.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2017) {
-                    finder = mongoTemplate2017.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2017.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2018) {
-                    finder = mongoTemplate2018.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2018.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2019) {
-                    finder = mongoTemplate2019.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2019.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2020) {
-                    finder = mongoTemplate2020.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2020.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2021) {
-                    finder = mongoTemplate2021.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2021.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2022) {
-                    finder = mongoTemplate2022.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" , field) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2022.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" , field) , excludeId())).sort(Sorts.descending("vrijeme"));
                 }
                 MongoCursor<Document> cursor = finder.iterator();
                 try {
@@ -354,25 +356,108 @@ public class AdriaIndoorController {
         if((god <= currentYear)) {
             for (long i = god; i <= currentYear; i++) {
                 if (i == 2013) {
-                    finder = mongoTemplate2013.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2013.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" ) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2014) {
-                    finder = mongoTemplate2014.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme") , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2014.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme") , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2015) {
-                    finder = mongoTemplate2015.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2015.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" ) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2016) {
-                    finder = mongoTemplate2016.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2016.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" ) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2017) {
-                    finder = mongoTemplate2017.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2017.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" ) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2018) {
-                    finder = mongoTemplate2018.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2018.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" ) , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2019) {
-                    finder = mongoTemplate2019.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme") , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2019.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme") , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2020) {
-                    finder = mongoTemplate2020.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme") , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2020.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme") , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2021) {
-                    finder = mongoTemplate2021.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme") , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2021.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme") , excludeId())).sort(Sorts.descending("vrijeme"));
                 } else if (i == 2022) {
-                    finder = mongoTemplate2022.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(Projections.fields(Projections.include("vrijeme" ) , Projections.excludeId())).sort(Sorts.descending("vrijeme"));
+                    finder = mongoTemplate2022.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(fields(include("vrijeme" ) , excludeId())).sort(Sorts.descending("vrijeme"));
+                }
+                MongoCursor<Document> cursor = finder.iterator();
+                try {
+                    while (cursor.hasNext()) {
+
+                        lista.add(cursor.next().toJson());
+                        System.out.println(lista.get(lista.size()-1));
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+        }
+        return lista;
+    }
+    //http://localhost:8080/adria/001/fields/range/1388538300000/1388544000000?vrijeme=true&zadana=true&izmjerena=true&statusKlime=false&brzinaPuhanja=false&ventil=false&prisutnost=false&prozor=true&modKlime=false&wcSet=false&wcMjerenja=false
+    @GetMapping("/adria/{room}/fields/range/{timeFrom}/{timeTo}")
+    @ResponseBody
+    public List<String> getSelectiveAdriaInOne(@PathVariable String room,@PathVariable Long timeFrom , @PathVariable Long timeTo ,@RequestParam Boolean vrijeme , @RequestParam Boolean zadana  ,@RequestParam Boolean izmjerena ,@RequestParam Boolean statusKlime,@RequestParam Boolean brzinaPuhanja,@RequestParam Boolean ventil,@RequestParam Boolean prisutnost,@RequestParam Boolean prozor ,@RequestParam Boolean modKlime,@RequestParam Boolean wcSet,@RequestParam Boolean wcMjerenja) {
+        List<String> lista = new ArrayList<>();
+        long god = (timeFrom / 31556952000L) + 1970;
+        List<String> fields = new ArrayList<>();
+        System.out.println("godina: " + god);
+        System.out.println(vrijeme +" " +zadana +" "+ izmjerena);
+
+        if (vrijeme){
+            fields.add("vrijeme");
+        }
+        if (zadana){
+            fields.add("zadana");
+        }
+        if (izmjerena){
+            fields.add("izmjerena");
+        }
+        if (brzinaPuhanja){
+            fields.add("brzinaPuhanja");
+        }
+        if (ventil){
+            fields.add("ventil");
+        }
+        if (statusKlime){
+            fields.add("statusKlime");
+        }
+        if (modKlime){
+            fields.add("modKlime");
+        }
+        if (wcSet){
+            fields.add("wcSet");
+        }
+        if (wcMjerenja){
+            fields.add("wcMjerenja");
+        }
+        if (prisutnost){
+            fields.add("prisutnost");
+        }
+        if (prozor){
+            fields.add("prozor");
+        }
+
+        Bson projection = fields(include(fields), excludeId());
+        FindIterable<Document> finder = mongoTemplate.getCollection(room).find();
+        if((god <= currentYear)) {
+            for (long i = god; i <= currentYear; i++) {
+                if (i == 2013) {
+                    finder = mongoTemplate2013.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2014) {
+                    finder = mongoTemplate2014.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2015) {
+                    finder = mongoTemplate2015.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2016) {
+                    finder = mongoTemplate2016.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2017) {
+                    finder = mongoTemplate2017.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2018) {
+                    finder = mongoTemplate2018.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2019) {
+                    finder = mongoTemplate2019.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2020) {
+                    finder = mongoTemplate2020.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2021) {
+                    finder = mongoTemplate2021.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
+                } else if (i == 2022) {
+                    finder = mongoTemplate2022.getCollection(room).find(Filters.and(Filters.gte("vrijeme", timeFrom), Filters.lte("vrijeme", timeTo))).projection(projection).sort(Sorts.descending("vrijeme"));
                 }
                 MongoCursor<Document> cursor = finder.iterator();
                 try {

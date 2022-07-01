@@ -1,15 +1,9 @@
 package com.premelc.smartroommonitoringapp.config;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import org.springframework.context.annotation.*;
-import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
-import java.util.Collection;
-import java.util.Collections;
 
 @Configuration
 public class MongoDBconfig  {
@@ -18,7 +12,6 @@ public class MongoDBconfig  {
         return MongoClients.create("mongodb://localhost:27017");
     }
 
-    //mongoTemplate trenutno sluzi kao poveznica na tekucu godinu u bazi
     @Bean
     public MongoTemplate mongoTemplate() {
         return new MongoTemplate(mongoClient(), "2021");

@@ -24,7 +24,7 @@
         </div>
 
         <div class="logo">
-            <img src="./img/logo.gif">
+            <img src="./img/logo.png">
         </div>
 
         <div class="navbuttons">
@@ -131,14 +131,18 @@
                 </div>
                 <h1>MAIN ADRIA DATA</h1>
                 <div id="left">
-                    <button type="button" class="btn" onclick="drawChart('001','zadana','1362577200000','1640214000000')">test</button>
+                    <button type="button" class="btn" onclick="testna()">test</button>
                 </div>
 
             </div>
 
-            <div class = "right" id="right">
+    <div class ="right">
+        <h1>DHMZ DATA</h1>
+        <div class = "innerRight" id="right">
 
-            </div>
+        </div>
+    </div>
+
     <div class="bottombar">
 
     </div>
@@ -146,23 +150,33 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/boost.js"></script>
+<script src="https://code.highcharts.com/modules/boost.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script>
         //posljednje stanje sobe
 
+        function testna(){
+            openChartPopup();
+            var chart1 = Highcharts.chart('container', {
+                series: [{
+                    boostThreshold: 1,
+                    data: []
+                }]
+            });
+        }
+
         async function drawChart(roomNumber,field ,milis , milisTo){
-
             try{
-
                 var input = document.getElementsByName('array[]');
 
+                var chart1 = Highcharts.chart('container', {
+                    series: [{
+                        boostThreshold: 1
+                    }]
+                });
 
                 const chart = Highcharts.chart('container', {
-                    boost: {
-                        useGPUTranslations: true
-                    },
                     chart: {
-                        type: 'spline',
                         zoomType: 'x'
                     },
                     title: {
@@ -171,52 +185,121 @@
                     xAxis: {
                         type: 'datetime',
                         //Svakih 30 dana
-                        maxtickInterval: 30 * 7 * 24 * 36e5,
-                        mintickInterval: 24 * 36e5,
                         labels: {
                             rotation: 45,
                             format: '{value:%H:%M %d/%m/%Y}'
-                        },
-                        scrollbar: {
-                            enabled: true
                         }
                     },
-                    yAxis: {
-
-                        scrollbar: {
-                            enabled: true
+                    plotOptions: {
+                        series: {
+                            pointWidth: 20
                         }
                     }
                 });
-
                 showSpinner();
+                var start = new Date().getTime();
 
-
-                let data;
                 var i = 0;
-                var series =  [];
+
+                var series2 = [];
+                var requestBody = "?vrijeme=false&";
+                var data;
+                var data2;
+
+                if(field == "adria" || field=="both"){
                 for (var j = 0; j < input.length; j++) {
-                    if(input[j].checked){
-                        const fetchedData = await fetchReadingsInRange(roomNumber , input[j].value , milis , milisTo);
+                       requestBody += input[j].value + "=" + input[j].checked + "&";
+                }
+                if(requestBody.charAt(requestBody.length - 1) == '&'){
+                    requestBody = requestBody.slice(0,-1);
+                }
+                const fetchedData = await fetchSelectiveReadingsInRange(roomNumber , requestBody , milis , milisTo);
+
+
+                for (var k = 0 ; k < input.length; k++){
+                    if(input[k].checked){
+                        var series =  [];
                         for (i = 0;i < fetchedData.length; i++) {
-                            data2 = JSON.parse(fetchedData[i]);
-                            series[i] = [data2.vrijeme, data2[input[j].value]]
+                            data = JSON.parse(fetchedData[i]);
+                            //series[i] = [data.vrijeme, data[input[k].value]]
+                            series[i] = [data[input[k].value]]
                         }
-                        series = series.sort();
-                        console.log(series);
                         chart.addSeries({
-                            name: input[j].value,
-                            data: series
+                            boostThreshold: 1,
+                            name: input[k].value,
+                            data: series,
+                            type: 'line',
+                            pointWidth: 20,
+                            pointStart: milis,
+                            pointInterval: 300000
                         });
                     }
                 }
+                }
+
+                if(field == "dhmz" || field=="both"){
+                     input = document.getElementsByName('array2[]');
+                     requestBody = "?vrijeme=false&";
+
+                    for ( j = 0; j < input.length; j++) {
+                        requestBody += input[j].value + "=" + input[j].checked + "&";
+                    }
+                    if(requestBody.charAt(requestBody.length - 1) == '&'){
+                        requestBody = requestBody.slice(0,-1);
+                    }
+                   const fetchedData2 = await fetchSelectiveDHMZsInRange(requestBody , milis , milisTo);
+
+
+                    for ( k = 0 ; k < input.length; k++){
+                        if(input[k].checked){
+                            var series2 =  [];
+                            for (i = 0;i < fetchedData2.length; i++) {
+                                data2 = JSON.parse(fetchedData2[i]);
+                                series2[i] = [data2[input[k].value]]
+                            }
+                            chart.addSeries({
+                                boostThreshold: 1,
+                                name: input[k].value,
+                                data: series2,
+                                type: 'line',
+                                pointStart: milis,
+                                pointInterval: 3600000,
+                                lineWidth: 0.1
+                            });
+                        }
+                    }
+                }
+
+
             }catch(e){
                 console.log(e);
             }finally{
                 openChartPopup();
                 hideSpinner();
+                console.log("elapsed: " + (new Date().getTime()- start)/1000);
             }
         }
+
+        async function fetchSelectiveDHMZsInRange(requestBody , milis , milisTo){
+            try {
+                const reading = await axios.get(`http://localhost:8080/dhmz/fields/range/${milis}/${milisTo}`+requestBody)
+                return reading.data;
+            }
+            catch (e){
+                console.log(e)
+            }
+        }
+
+        async function fetchSelectiveReadingsInRange(room , requestBody , timeFrom , timeTo){
+            try {
+                const reading = await axios.get(`http://localhost:8080/adria/${room}/fields/range/${timeFrom}/${timeTo}`+requestBody)
+                return reading.data;
+            }
+            catch (e){
+                console.log(e)
+            }
+        }
+
         //posljednje stanje adria rooms
         async function fetchData(roomId){
             try {
@@ -377,6 +460,7 @@
         <h2 >Prisutnost : ${data.prisutnost}</h2>
         <h2 >Zadana temperatura : ${data.zadana}</h2>
         <h2 >Izmjerena temperatura : ${data.izmjerena}</h2>
+         <h2 >Brzina puhanja : ${data.brzinaPuhanja}</h2>
         <h2 >Status klime : ${data.statusKlime}</h2>
         <h2 >Mod klime : ${data.modKlime}</h2>
         <h2 >Prozor : ${data.prozor}</h2>
@@ -434,6 +518,7 @@
         <h2 >Prisutnost : ${data.prisutnost}</h2>
         <h2 >Zadana temperatura : ${data.zadana}</h2>
         <h2 >Izmjerena temperatura : ${data.izmjerena}</h2>
+        <h2 >Brzina puhanja : ${data.brzinaPuhanja}</h2>
         <h2 >Status klime : ${data.statusKlime}</h2>
         <h2 >Mod klime : ${data.modKlime}</h2>
         <h2 >Prozor : ${data.prozor}</h2>
@@ -457,14 +542,10 @@
        <h2 >Brzina vjetra : ${dhmz.brzinaVjetra}</h2>
        <h2 >Vlaznost : ${dhmz.vlaznost}</h2>
             `;
-
-
                 popupAdria.appendChild(dataDiv);
-
                 popupDHMZ.appendChild(dataDiv2);
                 popupDHMZ.appendChild(button2);
                 popupDHMZ.appendChild(button);
-
                 openPopupRoomState();
 
                 document.getElementById("userLoc").innerHTML = "ARCHIVE ROOM STATE";
@@ -473,8 +554,6 @@
             }finally{
                 hideSpinner();
             }
-
-
         }
 
         async function roomStateInRange(roomId , timeFrom , timeTo){
@@ -493,12 +572,16 @@
                     milisTo += 86400000;
                 }
                 var data = await fetchAdriaTimestamps(roomId , milis , milisTo);
-                var data2 = await fetchDHMZTimestamps(milis , milisTo);
 
-                if (data.length > 10000){
+
+                if (data.length > 1000){
                     timestamps = false;
                 }
+                if (timestamps){
+                    var data2 = await fetchDHMZTimestamps(milis , milisTo);
+                }
                 document.getElementById("left").innerHTML = "";
+                document.getElementById("right").innerHTML = "";
 
                 var roomNum = document.createElement("h2");
                 roomNum.innerHTML = `
@@ -532,48 +615,52 @@
                 `;
                         list2.appendChild(item2);
                     }
-
                 }
                 let item2 = document.createElement("h2");
                 item2.innerHTML = `Broj očitanja: ${data.length} `;
                 document.getElementById("left").appendChild(item2);
                 if(timestamps == false){
                     let item = document.createElement("h2");
-                    item.innerHTML = "Popis timestamp-ova nije dostupan za više od 10 000 očitanja";
+                    item.innerHTML = "Popis timestamp-ova nije dostupan za više od 1 000 očitanja";
                     document.getElementById("left").appendChild(item);
                 }else {
                     document.getElementById("left").appendChild(list);
                     document.getElementById("right").appendChild(list2);
                 }
-                const analyzeButton = document.createElement("span");
+                const analyzeButton = document.createElement("div");
                 analyzeButton.innerHTML = `
-                <input type="checkbox" name="array[]" value="zadana">Zadana</checkbox>
-                <input type="checkbox" name="array[]" value="izmjerena">izmjerena</checkbox>
-                <input type="checkbox" name="array[]" value="statusKlime">statusKlime</checkbox>
-                <input type="checkbox" name="array[]" value="brzinaPuhanja">brzinaPuhanja</checkbox>
-                <input type="checkbox" name="array[]" value="ventil">ventil</checkbox>
-                <input type="checkbox" name="array[]" value="prisutnost">prisutnost</checkbox>
-                <input type="checkbox" name="array[]" value="prozor">prozor</checkbox>
-                <input type="checkbox" name="array[]" value="modKlime">modKlime</checkbox>
-                <input type="checkbox" name="array[]" value="wcSet">wcSet</checkbox>
-                <input type="checkbox" name="array[]" value="wcMjerenja">wcMjerenja</checkbox>
-                 <button onclick="drawChart('${roomNumber}','adria' , ${milis} , ${milisTo})">ANALIZIRAJ ODABRANO</button>
-                 <button onclick="drawChart('${roomNumber}','both' , ${milis} , ${milisTo})">ANALIZIRAJ ADRIA I DHMZ</button>
-`;
-
-                const analyzeButton2 = document.createElement("span");
-                analyzeButton2.innerHTML = `
-                <input type="checkbox" name="array2[]" value="zracenje">Zracenje</checkbox>
-                <input type="checkbox" name="array2[]" value="temperatura">temperatura</checkbox>
-                <input type="checkbox" name="array2[]" value="smjerVjetra">Smjer Vjetra</checkbox>
-                <input type="checkbox" name="array2[]" value="brzinaVjetra">brzinaVjetra</checkbox>
-                <input type="checkbox" name="array2[]" value="vlaznost">vlaznost</checkbox>
-                 <button onclick="drawChart('${roomNumber}','dhmz' , ${milis} , ${milisTo})">ANALIZIRAJ ODABRANO</button>
+                <div class="checkboxDiv" >
+                <div class="leftCheckbox" style="height: 100%">
+                <h4>Adria podaci za analizu</h4>
+                <div class="historyFilter"><input  type="checkbox" name="array[]" value="zadana">Zadana</checkbox></div>
+                <div class="historyFilter"><input  type="checkbox" name="array[]" value="izmjerena">izmjerena</checkbox></div>
+                <div class="historyFilter"><input  type="checkbox" name="array[]" value="statusKlime">statusKlime</checkbox></div>
+                <div class="historyFilter"><input  type="checkbox" name="array[]" value="brzinaPuhanja">brzinaPuhanja</checkbox></div>
+                <div class="historyFilter"><input  type="checkbox" name="array[]" value="ventil">ventil</checkbox></div>
+                <div class="historyFilter"> <input  type="checkbox" name="array[]" value="prisutnost">prisutnost</checkbox></div>
+                <div class="historyFilter"> <input  type="checkbox" name="array[]" value="prozor">prozor</checkbox></div>
+                <div class="historyFilter"> <input  type="checkbox" name="array[]" value="modKlime">modKlime</checkbox></div>
+                <div class="historyFilter"> <input  type="checkbox" name="array[]" value="wcSet">wcSet</checkbox></div>
+                <div class="historyFilter"> <input  type="checkbox" name="array[]" value="wcMjerenja">wcMjerenja</checkbox></div>
+                <br>
+                <button type='button' class='btn' onclick="drawChart('${roomNumber}','adria' , ${milis} , ${milisTo})">ANALIZIRAJ ADRIA ODABRANO</button>
+                </div>
+                <div class="rightCheckbox" style="height: 100%">
+                <h4>DHMZ podaci za analizu</h4>
+                <div class="historyFilter"> <input  type="checkbox" name="array2[]" value="zracenje">Zracenje</checkbox></div>
+                <div class="historyFilter"> <input  type="checkbox" name="array2[]" value="temperatura">temperatura</checkbox></div>
+                <div class="historyFilter"> <input  type="checkbox" name="array2[]" value="smjerVjetra">Smjer Vjetra</checkbox></div>
+                <div class="historyFilter"> <input  type="checkbox" name="array2[]" value="brzinaVjetra">brzinaVjetra</checkbox></div>
+                <div class="historyFilter">  <input  type="checkbox" name="array2[]" value="vlaznost">vlaznost</checkbox></div>
+                <br><br><br><br><br>
+                <button type='button' class='btn' onclick="drawChart('${roomNumber}','dhmz' , ${milis} , ${milisTo})">ANALIZIRAJ DHMZ</button>
+                </div>
+                <button type='button' class='btn' style="width: 100%" onclick="drawChart('${roomNumber}','both' , ${milis} , ${milisTo})">ANALIZIRAJ ADRIA I DHMZ</button>
+                </div>
+                </div>
 `;
 
                 document.getElementById("left").appendChild(analyzeButton);
-
-                document.getElementById("right").append(analyzeButton2);
 
                 closeRoomOnDayForm();
                 closeRoomArchiveStatusForm();
@@ -591,6 +678,7 @@
                 const data = await fetchData(roomId);
                 const date = new Date(data.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
                 document.getElementById("left").innerHTML =`
+
         <h1>Broj sobe : <span id="currentRoomId">${roomId}</span></h1>
         <h2 >Vrijeme : ${date}</h2>
         <h2 >Prisutnost : ${data.prisutnost}</h2>
@@ -602,11 +690,11 @@
         <h2 >Ventil : ${data.ventil}</h2>
         <h2 >WC set : ${data.wcSet}</h2>
         <h2 >WC mjerenja : ${data.wcMjerenja}</h2>
+
 `;
                 const dhmz = await fetchCurrentDHMZ()
                 const date2 = new Date(dhmz.vrijeme).toLocaleString('hr-HR' , { timeZone: 'UTC' });
                 document.getElementById("right").innerHTML =`
-        <h1>DHMZ DATA</h1>
         <h3>Posljednje očitanje: </h3>
         <h2>Vrijeme : ${date2}</h2>
         <h2 >Zračenje : ${dhmz.zracenje}</h2>

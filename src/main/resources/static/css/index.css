@@ -21,8 +21,41 @@ body {
     top : 0px;
 }
 
+.historyFilter{
+    min-width: 80px;
+    border: #111111;
+}
+.checkboxDiv{
+    flex-flow: row nowrap;
+}
+.leftCheckbox{
+    float: left;
+    width: 50%;
+}
+.rightCheckbox{
+    float: left;
+    width: 50%;
+}
+.rightCheckbox .btn{
+   transform: translate(0px , 27px);
+
+}
+
 .navbar a:hover{
 
+}
+
+.checkboxDiv .btn {
+    min-height: 100%;
+    padding: 12px 20px;
+    border: 2px black;
+    background-color: #8ebf42;
+    color: #fff;
+    cursor: pointer;
+    width: 90%;
+    margin-bottom: 15px;
+    opacity: 0.8;
+    bottom: 20px;
 }
 
 .navbar a:visited , a:link , a:active{
